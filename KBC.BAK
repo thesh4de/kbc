@@ -1,0 +1,489 @@
+#include<fstream.h>
+#include<conio.h>
+#include<time.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+class question // The main class.
+{protected:
+int sn;
+public:
+char q[200],op1[20],op2[20],op3[20],op4[20];
+int xsn()
+{return sn;}
+void xsn(int s)
+{sn=s;}};
+
+class checker : public question // Can access sn from question.
+{public:
+int check(int df);};
+
+void hofi();
+int option(char a[20],char b[20],char c[20],char d[20],int e,int f,int g) //The option shuffler.
+{question ques;
+int k,z;
+k=random(8);
+if(k==0)
+{cout<<"1) "<<d<<'\t'<<"2) "<<b<<endl<<"3) "<<a<<'\t'<<"4) "<<c;
+z=3;}
+else if(k==1)
+{cout<<"1) "<<b<<'\t'<<"2) "<<a<<endl<<"3) "<<d<<'\t'<<"4) "<<c;
+z=2;}
+else if(k==2)
+{cout<<"1) "<<a<<'\t'<<"2) "<<b<<endl<<"3) "<<d<<'\t'<<"4) "<<c;
+z=1;}
+else if(k==3)
+{cout<<"1) "<<b<<'\t'<<"2) "<<c<<endl<<"3) "<<d<<'\t'<<"4) "<<a;
+z=4;}
+else if(k==4)
+{cout<<"1) "<<c<<'\t'<<"2) "<<a<<endl<<"3) "<<b<<'\t'<<"4) "<<d;
+z=2;}
+else if(k==5)
+{cout<<"1) "<<a<<'\t'<<"2) "<<b<<endl<<"3) "<<c<<'\t'<<"4) "<<d;
+z=1;}
+else if(k==6)
+{cout<<"1) "<<c<<'\t'<<"2) "<<d<<endl<<"3) "<<a<<'\t'<<"4) "<<b;
+z=3;}
+else
+{cout<<"1) "<<c<<'\t'<<"2) "<<d<<endl<<"3) "<<b<<'\t'<<"4) "<<a;
+z=4;}
+cout<<endl<<endl;
+if(e==0)
+cout<<"5) 50 - 50\t\t";
+if(f==0)
+cout<<"6) Double Dip\t\t";
+if(g==0)
+cout<<"7) Audience Poll";
+return z;}
+
+int checker::check(int df) //Finds the no. of questions in a file.
+{question ques;
+ifstream f;
+if (df==0)
+f.open("data0.dat",ios::binary);
+if (df==1)
+f.open("data1.dat",ios::binary);
+if(df==2)
+f.open("data2.dat",ios::binary);
+while(f)
+f.read((char*)&ques,sizeof(ques));
+f.close();
+return ques.xsn();}
+
+void qw(int df) // Writes questions into a file.
+{checker cq;
+question ques;
+if(df==0)
+ques.xsn(cq.check(0)+1);
+if(df==1)
+ques.xsn(cq.check(1)+1);
+if(df==2)
+ques.xsn(cq.check(2)+1);
+cout<<"Enter your question : ";gets(ques.q);
+cout<<"Enter correct answer : ";gets(ques.op1);
+cout<<"Enter other option : ";gets(ques.op2);
+cout<<"Enter other option : ";gets(ques.op3);
+cout<<"Enter other option : ";gets(ques.op4);
+ofstream f;
+if(df==0)
+f.open("data0.dat",ios::binary|ios::app);
+if(df==1)
+f.open("data1.dat",ios::binary|ios::app);
+if(df==2)
+f.open("data2.dat",ios::binary|ios::app);
+f.write((char*)&ques,sizeof(ques));
+f.close();}
+
+void ff(char a[20],char b[20],char chl[15]) // Lifeline - 50-50
+{cout<<endl<<"These are your new options : "<<endl;
+int z=random(2);
+if(z==0)
+{cout<<"1) "<<a<<'\t'<<"2) "<<b;
+Again1:
+cout<<endl<<"Enter your option : ";
+int x;
+cin>>x;
+if(x==1)
+cout<<"Nailed it ! That's correct. Next question...."<<endl;
+else if(x==2)
+{cout<<"Oops sorry that was not correct.... "<<endl;
+getch();
+cout<<"Toooo tu tu too tu tu tu tooooooooooooo......"<<endl;
+getch();
+cout<<"You've Bagged Rs."<<chl<<endl;
+getch();
+hofi();
+getch();
+exit(0);}
+else
+{cout<<"Enter a correct option pls.... And only one lifeline per question.";
+goto Again1;}}
+else
+{cout<<"1) "<<b<<'\t'<<"2) "<<a;
+Again2:
+cout<<endl<<"Enter your option : ";
+int x;
+cin>>x;
+if(x==2)
+cout<<"Nailed it ! That's correct. Next question...."<<endl;
+else if(x==1)
+{cout<<"Oops sorry that was not correct.... "<<endl;
+getch();
+cout<<"Toooo tu tu too tu tu tu tooooooooooooo......"<<endl;
+getch();
+cout<<"Congrats you've recieved Rs."<<chl<<endl;
+getch();
+hofi();
+getch();
+exit(0);}
+else
+{cout<<"Enter a correct option pls.... And only one lifeline per question.";
+goto Again2;}}}
+
+void x2(int a,char chl[15]) // Lifeline - x2
+{cout<<"Okay now you have two chances !"<<endl;
+cout<<"Enter you option : ";
+int ans;
+cin>>ans;
+if (ans==a)
+cout<<"Got it on your first try. Guess you just wasted this lifeline :P"<<endl;
+else
+{cout<<"Nope....";
+cout<<"You can try once again....  "<<endl;
+cout<<"Enter your option : ";
+cin>>ans;
+if(ans==a)
+cout<<"Hmmm... That's correct. Moving on...."<<endl;
+else
+{cout<<"Oops sorry that was not correct.... "<<endl;
+getch();
+cout<<"Toooo tu tu too tu tu tu tooooooooooooo......"<<endl;
+getch();
+cout<<"Your journey has won you Rs."<<chl<<endl;
+getch();
+hofi();
+getch();
+exit(0);}}}
+
+void ap(int a,char chl[15]) // Lifeline - Audience pole
+{int z,y,x,w,v,u;
+z=70+random(31);
+y=100-z;
+x=random(y+1);
+w=y-x;
+v=random(w+1);
+u=w-v;
+cout<<endl<<"It's time for the audience to vote !"<<endl;
+if (a==1)
+cout<<"1) "<<z<<" %"<<'\n'<<"3) "<<x<<" %"<<'\n'<<"4) "<<v<<" %"<<'\n'<<"2) "<<u<<" %"<<endl;
+if (a==2)
+cout<<"2) "<<z<<" %"<<'\n'<<"3) "<<x<<" %"<<'\n'<<"4) "<<v<<" %"<<'\n'<<"1) "<<u<<" %"<<endl;
+if (a==3)
+cout<<"3) "<<z<<" %"<<'\n'<<"1) "<<x<<" %"<<'\n'<<"2) "<<v<<" %"<<'\n'<<"4) "<<u<<" %"<<endl;
+if (a==4)
+cout<<"4) "<<z<<" %"<<'\n'<<"3) "<<x<<" %"<<'\n'<<"1) "<<v<<" %"<<'\n'<<"2) "<<u<<" %"<<endl;
+int ans;
+cout<<"Enter your option : ";
+cin>>ans;
+cout<<endl;
+if(ans==a)
+{cout<<"Going with the audience eh.... Lets check if the audience were correct...."<<endl;
+getch();
+cout<<"And... It's correct. Moving on......."<<endl;}
+else
+{cout<<"Oops sorry that was not correct.... "<<endl;
+getch();
+cout<<"Toooo tu tu too tu tu tu tooooooooooooo......"<<endl;
+getch();
+cout<<"I guess you should have gone with the audience..... Anyways you have won Rs."<<chl<<endl;
+getch();
+hofi();
+getch();
+exit(0);}}
+
+void qr(int rn,int df,int &a,int &b,int &c,char ch[15]) // Reads from the file. And is the Guruji.
+{question ques;
+ifstream f;
+if (df==0)
+f.open("data0.dat",ios::binary);
+if (df==1)
+f.open("data1.dat",ios::binary);
+if(df==2)
+f.open("data2.dat",ios::binary);
+while(f.read((char*)&ques,sizeof(ques)))
+{if(ques.xsn()==rn)
+break;}
+cout<<ques.q<<endl<<endl;
+getch();
+int j;
+j=option(ques.op1,ques.op2,ques.op3,ques.op4,a,b,c);
+int ans;
+Again:
+cout<<endl<<"Enter your option : ";
+cin>>ans;
+if(ans==5&&a==0)
+{ff(ques.op1,ques.op2,ch);
+a=1;}
+else if(ans==6&&b==0)
+{x2(j,ch);
+b=1;}
+else if(ans==7&&c==0)
+{ap(j,ch);
+c=1;}
+else if (ans==5&&a==1)
+{cout<<endl<<"Sorry you have already used this lifeline....."<<endl;
+goto Again;}
+else if (ans==6&&b==1)
+{cout<<endl<<"Sorry you have already used this lifeline....."<<endl;
+goto Again;}
+else if (ans==7&&c==1)
+{cout<<endl<<"Sorry you have already used this lifeline....."<<endl;
+goto Again;}
+else if(ans==j)
+{cout<<endl;
+int q;
+q=random(6);
+if(q==0)
+cout<<"Very nice. Solved it with ease huh. Next question."<<endl;
+if(q==1)
+cout<<"That's absolutely correct. I guess the next question will give you a challenge..."<<endl;
+if(q==2)
+cout<<"Congrats! Thats correct!! Next...."<<endl;
+if(q==3)
+cout<<"Nice one. I guess that was easy."<<endl;
+if(q==4)
+cout<<"Yes Yes Yes !"<<endl;
+if(q==5)
+cout<<"That was a little hard I guess. Or maybe not... Anyways...";}
+else
+{cout<<"Oops sorry that was not correct.... "<<endl;
+getch();
+cout<<"Toooo tu tu too tu tu tu tooooooooooooo......"<<endl;
+getch();
+cout<<"I guess luck is not with you .... Anyways, you've recieved Rs."<<ch<<endl;
+getch();
+hofi();
+getch();
+exit(0);}
+f.close();}
+
+void hofo(char eman[50]) // Write into hall of fame.
+{struct nm
+{char name[50];};
+nm n;
+strcpy(n.name,eman);
+ofstream fout;
+fout.open("hof.dat",ios::binary|ios::app);
+fout.write((char*)&n,sizeof(n));
+fout.close();}
+
+void hofi() // Read from hall of fame.
+{struct nm
+{char name[50];};
+nm n;
+ifstream fin;
+fin.open("hof.dat",ios::binary);
+cout<<endl<<endl<<"*******************************************************************************";
+cout<<endl<<"\t\t\tPEOPLE WHO HAVE BEAT THE GAME"<<endl;
+cout<<"*******************************************************************************"<<endl<<endl;
+while(fin.read((char*)&n,sizeof(n)))
+cout<<"*) "<<n.name<<endl;
+fin.close();}
+
+void admin() // Administrator Access
+{re:
+cout<<endl<<"Enter your password : ";
+int k=0,grade;
+char a[20],b[100],e[100],choice;
+gets(a);
+for(int i=0;a[i]!='\0';i++)
+{b[k]=a[i]+14;
+b[++k]=a[i]+7;
+b[++k]=a[i]-9;
+b[++k]=a[i]-4;}
+ifstream d;
+d.open("pass.dat",ios::binary);
+d>>e;
+d.close();
+if(strcmp(b,e)==0)
+{cout<<endl<<"Access Granted."<<endl;
+rep:
+cout<<"The Grade of the question you're about to enter [1,2,3] : ";
+cin>>grade;
+cout<<endl<<"Note : [Questions cannot exeed 200 characters and options cannot exeed 20 char]"<<endl;
+getch();
+qw(grade-1);
+rep0:
+cout<<endl<<"Do you want to enter more ? [y/n]: ";
+cin>>choice;
+if(choice=='y')
+goto rep;
+else if(choice=='n')
+{cout<<endl<<"Quitting";
+getch();
+exit(0);}
+else
+{cout<<endl<<"Sorry didn't catch you.";
+goto rep0;}
+}
+else
+{cout<<endl<<"Access Denied. Try again ? [y/n] : ";
+cin>>choice;
+if(choice=='y')
+goto re;
+else
+{cout<<endl<<"Quitting.........";
+exit(0);}
+}}
+
+void main() // Body
+{randomize();
+clrscr();
+checker cq;
+char name[50],cash[15];
+strcpy(cash,"0");
+cout<<" .-'-._,-'_`-._,-'_`-._,-'_`-._,-'_`-,_,-'_`-,_,-'_`-,_,-'_`-,_,-'_`-,.\n(  ,-'_,-<.>-'_,-<.>-'_,-<.>-'_,-<.>-'_,-<.>-'_,-<.>-'_,-<.>-'_,-~-} ;.\n \ \.'_>-._`-<_>-._`-<_>-._`-<_>-._`-<_>-._`-<_>-._`-<_>-._`-._~--. \ .\n /\ \/ ,-' `-._,-' `-._,-' `-._,-' `-._,-' `-._,-' `-._,-' `-._`./ \ \ .\n";
+cout<<"( (`/ /                                                        `/ /.) ) .\n \ \ / \                    !-! The Creators !-!               / / \ / .\n / \ / /                                                       \ / \ \ .\n  (`/ /                                                         / /.) ) .\n \ \ / \                      * Tejas Ashok *                  / / \ / .\n  \ \') )                                                     ( (,\ \ .\n / \ / /                   * Arun Bharadwaj *                  \ / \ \ .\n( (`/ /                                                         / /.) ) .\n \ \ / \                      * L.K. Praveen *                 / / \ / .\n  \ \') )                                                     ( (,\ \ .\n / \ / /                       * Sanjay *                      \ / \ \ .\n( ( / /                                                         / /.) ) .\n \ \ / \       _       _       _       _       _       _       / / \ /.\n";
+cout<<"  \ `.\ `-._,-'_`-._,-'_`-._,-'_`-._,-'_`-._,-'_`-._,-'_`-._,-'_/,\ \ .\n ( `. `,~-._`-<,>-._`-<,>-._`-<,>-._`-<,>-._`-<,>-._`-<,>-._`-=,' ,\ \ .\n `. `'_,-<_>-'_,-<_>-'_,-<_>-'_,-<_>-'_,-<_>-'_,-<_>-'_,-<_>-'_,'-' ; .\n   `-' `-._,-' `-._,-' `-._,-' `-._,-' `-._,-' `-._,-' `-._,-' `-.-' ."<<endl<<endl;
+cout<<"*******************************************************************************"<<endl;
+cout<<"\t\t\t  KAUN BANEGA CROREPATHY"<<endl;
+cout<<"*******************************************************************************"<<endl<<endl;
+cout<<"Welcome to KBC !! This is just as same as the original KBC with all its richness..."<<endl;
+getch();
+cout<<"I hope you know all the rules already."<<endl;
+getch();
+cout<<"Anyways I will give you some basics. "<<endl<<"You will be asked 15 multiple choise questions. And as in the original KBC, U also have lifelines here."<<endl;
+getch();
+cout<<"Lifelines : "<<endl;
+cout<<"5) 50-50"<<'\t'<<"6) Double Dip"<<'\t'<<"7) Audience Poll"<<endl;
+getch();
+cout<<"Remember these numbers 5, 6 and 7. When you don't know the answer to your question, just type 5, 6 or 7 to activate your lifelines. But remeber only one lifeline per question. If another lifeline is used, it'll be regaurded as a wrong answer."<<endl;
+getch();
+cout<<"Now lets get started. But first..."<<endl;
+getch();
+cout<<"Are you a Player (p) or Administrator (x) ?"<<endl;
+cout<<"Enter your option : ";
+char eg;
+cin>>eg;
+if(eg=='x')
+{clrscr();
+cout<<"Welcome to the Administrator Login Page."<<endl;
+admin();}
+cout<<"Enter your name : ";gets(name);
+cout<<endl<<"Okay "<<name<<" ! Lets begin our journey !!\nOnward to our first question....\n";
+getch();
+int m=0,n=0,o=0;
+int x;
+x=random(cq.check(0)+1); //Easy part
+for(int k=0;k<5;k++)
+{if(x>cq.check(0))
+x=0;
+cout<<endl<<k+1<<") ";
+qr(x,0,m,n,o,cash);
+getch();
+if(k==0)
+{cout<<"That was you first question and you've recieved Rs.1000 !"<<endl;
+strcpy(cash,"1000");}
+if(k==1)
+{cout<<"You've passed the second question ! You have Rs.2000 in your hand."<<endl;
+strcpy(cash,"2000");}
+if(k==2)
+{cout<<"Great Spirit! You've recieved Rs.3000."<<endl;
+strcpy(cash,"3000");}
+if(k==3)
+{cout<<"Four questions passed and still moving on.... You've recieved Rs.5000!"<<endl;
+strcpy(cash,"5000");}
+if(k==4)
+{cout<<"Five questions passed!! Now the easy part is over. Get ready for a little bit of a challenge."<<endl;
+getch();
+cout<<"Oh and by the way, you've recieved Rs.10,000"<<endl;
+strcpy(cash,"10,000");}
+getch();
+x++;}
+x=random(cq.check(1)+1); // Medium part
+for(k=5;k<10;k++)
+{if(x>cq.check(1))
+x=0;
+cout<<endl<<k+1<<") ";
+qr(x,1,m,n,o,cash);
+getch();
+if(k==5)
+{cout<<"Five questions! Thats almost halfay through ! You have won Rs.20,000"<<endl;
+strcpy(cash,"20,000");}
+if(k==6)
+{cout<<"Rs.40,000 goes into your account."<<endl;
+strcpy(cash,"40,000");}
+if(k==7)
+{cout<<"You are half way through to the finish ! You have won Rs.80,000"<<endl;
+strcpy(cash,"80,000");}
+if(k==8)
+{cout<<"Wow! You have won Rs.1,60,000"<<endl;
+strcpy(cash,"1,60,000");}
+if(k==9)
+{cout<<"Only 5 more questions to win your dream 1 Cr. Now comes the hard part. All the best !"<<endl;
+getch();
+cout<<"By the way, you have won Rs.3,20,000"<<endl;
+strcpy(cash,"3,20,000");}
+getch();
+x++;}
+x=random(cq.check(2)+1); // Hard part
+for(k=10;k<15;k++)
+{if(x>cq.check(2))
+x=0;
+cout<<endl<<k+1<<") ";
+qr(x,2,m,n,o,cash);
+getch();
+if(k==10)
+{cout<<"Whoa! Are you feeling lucky ? You have won Rs.6,40,000."<<endl;
+strcpy(cash,"6,40,000");}
+if(k==11)
+{cout<<"Only three more questions for you to become a Crorepathy!"<<endl;
+strcpy(cash,"12,50,000");}
+if(k==12)
+{cout<<"Now I am not going to say anything. Just concentrate on winning the next 2. "<<endl;
+getch();
+cout<<"You have won Rs.25,00,000."<<endl;
+strcpy(cash,"25,00,000");}
+if(k==13)
+{cout<<"Just one more question to go. There's Rs.50,00,000 in your hands."<<endl;
+strcpy(cash,"50,00,000");}
+if(k==14)
+{cout<<"Wait a minute.... There are no more questions!! You have won KBC !!!!."<<endl;
+getch();
+cout<<"You have won Rs.1,00,00,000 !!!!"<<endl;
+getch();
+cout<<"**********************************************************************"<<endl;
+cout<<"!!!CONGRATS!!!!!!CONGRATS!!!!!!CONGRATS!!!!!!CONGRATS!!!!!!CONGRATS!!!"<<endl;
+cout<<"**********************************************************************"<<endl<<endl;
+getch();
+cout<<"Congratulations on beating this game. As a matter of fact, we cannot give you the real deal. So we would like to honour you by letting you add a question into our database so that other players can play with your question too."<<endl<<endl;
+getch();
+int write;
+int fi=0;
+char last;
+while(fi==0)
+{cout<<"Are you intrested in adding a question to our database ?[y/n] :";
+cin>>last;
+if(last=='y')
+{cout<<endl<<"So how much hard do you think your question is ?"<<endl;
+getch();
+cout<<"Is it hard as, \n1) First 5 questions\n2)Midlle 5 questions\n3)Last 5 questions\n";
+cout<<"Enter your option : ";
+cin>>write;
+cout<<endl;
+qw(write-1);
+fi=1;}
+else if(last=='n')
+{cout<<"Okay then."<<endl;
+fi=1;}
+else
+cout<<endl<<"Sorry didn't catch you.. Can you type again ?";}
+cout<<"Your name will be stored in the Hall of Fame of KBC. To view the hall of fame, start the game again."<<endl;
+hofo(name);
+hofi();
+getch();
+cout<<"Goodbye....";
+exit(0);}
+getch();
+x++;}
+getch();}
